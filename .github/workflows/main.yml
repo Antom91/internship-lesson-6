@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Делаем checkout текущей ветки
-      - uses: actions/checkout@master
+      - uses: actions/checkout@main
       # Доставляем собранное приложение на сервер
       - name: Deploy to Server
-        uses: appleboy/scp-action@master
+        uses: appleboy/scp-action@main
         with:
           host: ${{ secrets.DEPLOY_SERVER_HOST }}
           port: ${{ secrets.DEPLOY_SERVER_PORT }}
