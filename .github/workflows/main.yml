@@ -18,4 +18,6 @@ jobs:
           SOURCE: "./"
           REMOTE_HOST: ${{ secrets.DEPLOY_SERVER_HOST }}
           REMOTE_USER: ${{ secrets.DEPLOY_SERVER_USERNAME }}
-          TARGET: "/tmp/test"
+          TARGET: "/home/ubuntu/app"
+        run: |
+                mkdir -p /tmp/blablabla
