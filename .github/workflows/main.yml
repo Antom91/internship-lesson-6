@@ -19,5 +19,10 @@ jobs:
           REMOTE_HOST: ${{ secrets.DEPLOY_SERVER_HOST }}
           REMOTE_USER: ${{ secrets.DEPLOY_SERVER_USERNAME }}
           TARGET: "/home/ubuntu/app"
-        run: |
-                mkdir -p /tmp/blablabla
+      - name: Run SSH command
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: cd /home/ubuntu/app ; docker-compose up -d --build
+          host: ${{ secrets.DEPLOY_SERVER_HOST }}
+          username: ${{ secrets.DEPLOY_SERVER_USERNAME }}
+          privateKey: ${{ secrets.DEPLOY_SERVER_KEY }}
