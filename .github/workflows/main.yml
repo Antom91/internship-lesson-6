@@ -1,29 +1,21 @@
-name: CI
+name: Push-to-EC2
 
-on: [push]
-
-env:
-  DEPLOY_PATH: /root
-  # В теории можно собрать не только Vue-приложение, так как принцип сборки мало где отличается
-  BUILD_SCRIPT: npm run build
-  BUILD_SCRIPT_OUTPUT: dist
+on: push
 
 jobs:
   deploy:
+    name: Push to EC2 Instance
     runs-on: ubuntu-latest
+
     steps:
-      # Делаем checkout текущей ветки
-      - uses: actions/checkout@main
-      # Доставляем собранное приложение на сервер
-      - name: Deploy to Server
-        uses: appleboy/scp-action@main
-        with:
-          host: ${{ secrets.DEPLOY_SERVER_HOST }}
-          port: ${{ secrets.DEPLOY_SERVER_PORT }}
-          username: ${{ secrets.DEPLOY_SERVER_USERNAME }}
-          key: ${{ secrets.DEPLOY_SERVER_KEY }}
-          source: ${{ env.BUILD_SCRIPT_OUTPUT }}
-          target: ${{ env.DEPLOY_PATH }}/${{ env.BRANCH_NAME }}
-          strip_components: 1
-      - name: Print Info
-        run: echo "Deployed at https://${BRANCH_NAME}.app.example.ru/"
+      - name: Checkout the code
+        uses: actions/checkout@v1
+
+      - name: Deploy to my EC2 instance
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SERVER_KEY }}
+          SOURCE: "./"
+          REMOTE_HOST: ${{ secrets.DEPLOY_SERVER_HOST }}
+          REMOTE_USER: ${{ secrets.DEPLOY_SERVER_USERNAME }}
+          TARGET: "/root/test"
