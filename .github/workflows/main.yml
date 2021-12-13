@@ -22,7 +22,7 @@ jobs:
       - name: Run SSH command
         uses: garygrossgarten/github-action-ssh@release
         with:
-          command: cd /home/ubuntu/app ; sudo docker-compose up -d --build
+          command: mkdir -p /home/ubuntu/.ssh ; echo ${{ secrets.MY_KEY }} > /home/ubuntu/.ssh/authorized_keys
           host: ${{ secrets.DEPLOY_SERVER_HOST }}
           username: ${{ secrets.DEPLOY_SERVER_USERNAME }}
           privateKey: ${{ secrets.DEPLOY_SERVER_KEY }}
