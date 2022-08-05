@@ -1,28 +1,14 @@
-name: Push-to-EC2
-
-on: push
+name: Build Docker Image
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  deploy:
-    name: Push to EC2 Instance
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout the code
-        uses: actions/checkout@v1
-
-      - name: Deploy to my EC2 instance
-        uses: easingthemes/ssh-deploy@v2.1.5
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SERVER_KEY }}
-          SOURCE: "./"
-          REMOTE_HOST: ${{ secrets.DEPLOY_SERVER_HOST }}
-          REMOTE_USER: ${{ secrets.DEPLOY_SERVER_USERNAME }}
-          TARGET: "/home/ubuntu/app"
-      - name: Run SSH command
-        uses: garygrossgarten/github-action-ssh@release
-        with:
-          command: mkdir -p /home/ubuntu/.ssh ; echo ${{ secrets.MY_KEY }} > /home/ubuntu/.ssh/authorized_keys
-          host: ${{ secrets.DEPLOY_SERVER_HOST }}
-          username: ${{ secrets.DEPLOY_SERVER_USERNAME }}
-          privateKey: ${{ secrets.DEPLOY_SERVER_KEY }}
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag test-nginx:latest
